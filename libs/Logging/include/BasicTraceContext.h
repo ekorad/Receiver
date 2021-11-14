@@ -8,12 +8,13 @@
  * @copyright Copyright (c) 2021
  */
 
-#ifndef TRACE_CONTEXT_H
-#define TRACE_CONTEXT_H
+#ifndef BASIC_TRACE_CONTEXT_H
+#define BASIC_TRACE_CONTEXT_H
 
 #ifndef BASIC_TRACE_CONTEXT_PARAMS
 #define BASIC_TRACE_CONTEXT_PARAMS  __FUNCTION__, std::nullopt
-#define GEN_BASIC_TRACE_CTXT()      BasicTraceContext{ BASIC_TRACE_CONTEXT_PARAMS }
+#define GEN_BASIC_TRACE_CTXT()      BasicTraceContext{ \
+    BASIC_TRACE_CONTEXT_PARAMS }
 #define GBTC()                      GEN_BASIC_TRACE_CTXT()
 #endif
 
