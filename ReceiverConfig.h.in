@@ -1,0 +1,7 @@
+#ifndef RECEIVER_CONFIG_H
+#define RECEIVER_CONFIG_H
+
+#define Receiver_VERSION_MAJOR @Receiver_VERSION_MAJOR@
+#define Receiver_VERSION_MINOR @Receiver_VERSION_MINOR@
+
+#endif
