@@ -1,36 +1,36 @@
 /**
- * @file TimestampedLog.cpp
+ * @file TimestampedTrace.cpp
  * @author Vlad Zahiu (vladzahiu28@gmail.com)
- * @brief Implements the TimestampedLog class.
+ * @brief Implements the TimestampedTrace class.
  * @version 0.1
  * @date 2021-11-14
  * 
  * @copyright Copyright (c) 2021
  */
 
-#include "TimestampedLog.h"
+#include "TimestampedTrace.h"
 
-TimestampedLog::TimestampedLog(const std::string& msg,
+TimestampedTrace::TimestampedTrace(const std::string& msg,
     const Timestamp_t& timestamp)
-    : BasicLog(msg),
+    : BasicTrace(msg),
     _timestamp{ timestamp } {}
 
-TimestampedLog::Timestamp_t TimestampedLog::getTimestamp() const noexcept
+TimestampedTrace::Timestamp_t TimestampedTrace::getTimestamp() const noexcept
 {
     return _timestamp;
 }
 
-void TimestampedLog::setTimestamp(const Timestamp_t& timestamp) noexcept
+void TimestampedTrace::setTimestamp(const Timestamp_t& timestamp) noexcept
 {
     _timestamp = timestamp;
 }
 
-TimestampedLog::operator std::string() const
+TimestampedTrace::operator std::string() const
 {
     return ("[" + strTimestamp(_timestamp) + "] " + getMessage());
 }
 
-std::string TimestampedLog::strTimestamp(const Timestamp_t& timestamp) const
+std::string TimestampedTrace::strTimestamp(const Timestamp_t& timestamp) const
 {
     constexpr std::size_t microsPrecision = 5;
     constexpr std::size_t microsPerSec = 1000000;

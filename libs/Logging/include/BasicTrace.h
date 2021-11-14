@@ -1,23 +1,23 @@
 /**
- * @file BasicLog.h
+ * @file BasicTrace.h
  * @author Vlad Zahiu (vladzahiu28@gmail.com)
- * @brief Defines the BasicLog class.
+ * @brief Defines the BasicTrace class.
  * @version 0.1
  * @date 2021-11-14
  * 
  * @copyright Copyright (c) 2021
  */
 
-#ifndef BASIC_LOG_H
-#define BASIC_LOG_H
+#ifndef BASIC_TRACE_H
+#define BASIC_TRACE_H
 
 #include <string>
 #include <ostream>
 
-class BasicLog
+class BasicTrace
 {
 public:
-    BasicLog(const std::string& msg = "");
+    BasicTrace(const std::string& msg = "");
 
     std::string getMessage() const noexcept;
     void setMessage(const std::string& msg) noexcept;
@@ -25,7 +25,7 @@ public:
     virtual explicit operator std::string() const;
 
     friend std::ostream& operator<<(std::ostream& outStream,
-        const BasicLog& log);
+        const BasicTrace& log);
 
 private:
     std::string _msg;
