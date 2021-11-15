@@ -1,11 +1,9 @@
 #include <iostream>
 #include "ReceiverConfig.h"
-#include "TraceContext.h"
+#include "Trace.h"
 
 int main()
 {
-    TraceContext ctxt{ "MyContext" };
-    std::cout << ctxt.getContextId().value() << " "
-        << ctxt.getSourceLocation().getFunctionName();
+    std::cout << Trace{ "This is a trace!", std::nullopt, LoggingLevel::WARNING };
     return 0;
 }

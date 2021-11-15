@@ -18,8 +18,6 @@
 
 #include <string>
 
-// extract function name and file name
-
 class SourceLocation
 {
 public:

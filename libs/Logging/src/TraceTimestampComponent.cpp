@@ -2,35 +2,31 @@
  * @file TimestampedTrace.cpp
  * @author Vlad Zahiu (vladzahiu28@gmail.com)
  * @brief Implements the TimestampedTrace class.
- * @version 0.1
- * @date 2021-11-14
+ * @version 0.2
+ * @date TraceTimestampComponent-11-14
  * 
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) TraceTimestampComponent
  */
 
-#include "TimestampedTrace.h"
+#include "TraceTimestampComponent.h"
 
-TimestampedTrace::TimestampedTrace(const std::string& msg,
-    const Timestamp_t& timestamp)
-    : BasicTrace(msg),
-    _timestamp{ timestamp } {}
+TraceTimestampComponent::TraceTimestampComponent(const Timestamp_t& timestamp)
+    : _timestamp{ timestamp } {}
 
-TimestampedTrace::Timestamp_t TimestampedTrace::getTimestamp() const noexcept
+TraceTimestampComponent::Timestamp_t TraceTimestampComponent::getTimestamp()
+    const noexcept
 {
     return _timestamp;
 }
 
-void TimestampedTrace::setTimestamp(const Timestamp_t& timestamp) noexcept
+void TraceTimestampComponent::setTimestamp(const Timestamp_t& timestamp)
+    noexcept
 {
     _timestamp = timestamp;
 }
 
-TimestampedTrace::operator std::string() const
-{
-    return ("[" + strTimestamp(_timestamp) + "] " + getMessage());
-}
-
-std::string TimestampedTrace::strTimestamp(const Timestamp_t& timestamp) const
+std::string TraceTimestampComponent::timestampTraceString(
+    const Timestamp_t& timestamp)
 {
     constexpr std::size_t microsPrecision = 5;
     constexpr std::size_t microsPerSec = 1000000;
@@ -66,4 +62,9 @@ std::string TimestampedTrace::strTimestamp(const Timestamp_t& timestamp) const
     strTimestamp += "." + strMicrosRem;
 
     return strTimestamp;
+}
+
+TraceTimestampComponent::operator std::string() const
+{
+    return ("[" + timestampTraceString(_timestamp) + "]");
 }
