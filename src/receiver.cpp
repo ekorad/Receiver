@@ -1,10 +1,11 @@
 #include <iostream>
 #include "ReceiverConfig.h"
-#include "ExtendedTraceContext.h"
+#include "TraceContext.h"
 
 int main()
 {
-    ExtendedTraceContext context{ GETC() };
-    std::cout << context.getSourceFile().value() << std::endl;
+    TraceContext ctxt{ "MyContext" };
+    std::cout << ctxt.getContextId().value() << " "
+        << ctxt.getSourceLocation().getFunctionName();
     return 0;
 }
