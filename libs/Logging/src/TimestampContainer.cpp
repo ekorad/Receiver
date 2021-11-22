@@ -1,31 +1,23 @@
-/**
- * @file TimestampedTrace.cpp
- * @author Vlad Zahiu (vladzahiu28@gmail.com)
- * @brief Implements the TimestampedTrace class.
- * @version 0.2
- * @date TraceTimestampComponent-11-14
- * 
- * @copyright Copyright (c) TraceTimestampComponent
- */
+#include "TimestampContainer.h"
 
-#include "TraceTimestampComponent.h"
+#include <system_error>
 
-TraceTimestampComponent::TraceTimestampComponent(const Timestamp_t& timestamp)
+TimestampContainer::TimestampContainer(const Timestamp_t& timestamp)
     : _timestamp{ timestamp } {}
 
-TraceTimestampComponent::Timestamp_t TraceTimestampComponent::getTimestamp()
-    const noexcept
+TimestampContainer::Timestamp_t TimestampContainer::getTimestamp()
+const noexcept
 {
     return _timestamp;
 }
 
-void TraceTimestampComponent::setTimestamp(const Timestamp_t& timestamp)
-    noexcept
+void TimestampContainer::setTimestamp(const Timestamp_t& timestamp)
+noexcept
 {
     _timestamp = timestamp;
 }
 
-std::string TraceTimestampComponent::timestampTraceString(
+std::string TimestampContainer::timestampToTraceString(
     const Timestamp_t& timestamp)
 {
     constexpr std::size_t microsPrecision = 5;
@@ -62,9 +54,4 @@ std::string TraceTimestampComponent::timestampTraceString(
     strTimestamp += "." + strMicrosRem;
 
     return strTimestamp;
-}
-
-TraceTimestampComponent::operator std::string() const
-{
-    return ("[" + timestampTraceString(_timestamp) + "]");
 }

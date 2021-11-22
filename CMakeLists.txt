@@ -24,6 +24,10 @@ configure_file(ReceiverConfig.h.in ReceiverConfig.h)
 target_include_directories(Receiver PUBLIC
     "${PROJECT_BINARY_DIR}")
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(Receiver PRIVATE Threads::Threads)
+
 target_link_libraries(Receiver PUBLIC Logging)
 
 install(TARGETS Receiver DESTINATION bin)

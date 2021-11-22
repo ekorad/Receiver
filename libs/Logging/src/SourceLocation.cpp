@@ -10,13 +10,19 @@
 
 #include "SourceLocation.h"
 
+#ifdef _WIN32
+static constexpr char pathDelimiter = '\\';
+#else
+static constexpr char pathDelimiter = '/';
+#endif
+
 SourceLocation::SourceLocation(const std::string& funcName,
     const std::string& sourceFile, const std::size_t lineNum)
     : _func{ funcName }, _file{ sourceFile }, _line{ lineNum } {}
 
 std::string SourceLocation::extractFileName(const std::string& path) noexcept
 {
-    const auto foundIndex = path.find_last_of("/");
+    const auto foundIndex = path.find_last_of(pathDelimiter);
     if (foundIndex == std::string::npos)
     {
         return path;
