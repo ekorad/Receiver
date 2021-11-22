@@ -37,7 +37,7 @@ private:
 
     std::atomic_bool _paused = false;
     std::atomic_int _minLogLevel = defaultMinLogLevel.load();
-    std::atomic_uint64_t _logCount = 0;
+    std::atomic_uint64_t _currentTraceIndex = 0;
 };
 
 #endif

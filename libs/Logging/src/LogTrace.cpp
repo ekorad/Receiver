@@ -1,34 +1,34 @@
 #include "LogTrace.h"
 
 LogTrace::LogTrace(const std::string& message, const std::optional<std::string>& contextId,
-	const LoggingLevel level, const std::optional<std::size_t> count,
+	const LoggingLevel level, const std::optional<std::size_t> traceIndex,
 	const SourceLocation& sourceLocation, const ProcessContext& processContext,
 	const TimestampContainer::Timestamp_t& timestamp)
 	: LightweightLogTrace{ message, level, timestamp },
 	TraceContext{ contextId, processContext, sourceLocation },
-	_count{ count } {}
+	_currentTraceIndex{ traceIndex } {}
 
-std::size_t LogTrace::getGlobalCount()
+std::size_t LogTrace::getCurrentGlobalTraceIndex()
 {
-	return globalCount.load();
+	return currentGlobalTraceIndex.load();
 }
 
-std::optional<std::size_t> LogTrace::getCount() const
+std::optional<std::size_t> LogTrace::getCurrentTraceIndex() const
 {
-	return _count;
+	return _currentTraceIndex;
 }
 
-void LogTrace::setCount(const std::size_t count)
+void LogTrace::setCurrentTraceIndex(const std::size_t traceIndex)
 {
-	_count = count;
+	_currentTraceIndex = traceIndex;
 }
 
 LogTrace::operator std::string() const
 {
-	globalCount++;
-	return ("[" + std::to_string(globalCount.load()) + "]["
+	currentGlobalTraceIndex++;
+	return ("[" + std::to_string(currentGlobalTraceIndex.load()) + "]["
 		+ timestampToTraceString(getTimestamp()) + "]["
-		+ (getCount().has_value() ? std::to_string(getCount().value()) + "][" : "")
+		+ (getCurrentTraceIndex().has_value() ? std::to_string(getCurrentTraceIndex().value()) + "][" : "")
 		+ std::to_string(getProcessContext().getProcessId()) + "-"
 		+ std::to_string(getProcessContext().getThreadId()) + "]["
 		+ loggingLevelToString(getLevel()) + "]["
@@ -37,4 +37,4 @@ LogTrace::operator std::string() const
 		+ TrivialLogTrace::operator std::string());
 }
 
-std::atomic_uint64_t LogTrace::globalCount;
+std::atomic_uint64_t LogTrace::currentGlobalTraceIndex;

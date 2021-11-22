@@ -73,9 +73,9 @@ void Logger::log(const std::string& traceMessage, const LoggingLevel level,
 {
     if (static_cast<int>(level) >= _minLogLevel)
     {
-        LogTrace trace{ traceMessage, _contextId, level, _logCount.load(), location };
+        _currentTraceIndex++;
+        LogTrace trace{ traceMessage, _contextId, level, _currentTraceIndex.load(), location };
         _service.pushTrace(trace);
-        _logCount++;
     }
 }
 

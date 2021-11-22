@@ -12,22 +12,22 @@ public:
 	LogTrace(const std::string& message = "",
 		const std::optional<std::string>& contextId = std::nullopt,
 		const LoggingLevel level = LoggingLevel::DEBUG,
-		const std::optional<std::size_t> count = std::nullopt,
+		const std::optional<std::size_t> traceIndex = std::nullopt,
 		const SourceLocation& sourceLocation = {},
 		const ProcessContext& processContext = {},
 		const TimestampContainer::Timestamp_t& timestamp = TimestampContainer::getTimestampNow());
 
-	static std::size_t getGlobalCount();
+	static std::size_t getCurrentGlobalTraceIndex();
 
-	std::optional<std::size_t> getCount() const;
-	void setCount(const std::size_t count);
+	std::optional<std::size_t> getCurrentTraceIndex() const;
+	void setCurrentTraceIndex(const std::size_t traceIndex);
 
 	explicit operator std::string() const override;
 
 private:
-	static std::atomic_uint64_t globalCount;
+	static std::atomic_uint64_t currentGlobalTraceIndex;
 
-	std::optional<std::size_t> _count;
+	std::optional<std::size_t> _currentTraceIndex;
 };
 
 #endif
