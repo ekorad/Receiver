@@ -34,8 +34,10 @@
 # Logs
 *.log
 
-# CMake build directory
+# CMake build directories
 build/
+debug/
+release/
 
 # vscode directory
 .vscode

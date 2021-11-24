@@ -7,6 +7,16 @@
 int main(int argc, char* argv[])
 {
     ArgumentsParser argParser{ argc, argv };
-    SocketClient client{ argParser.getIPAddress(), argParser.getPort() };
+    SocketClient client;
+    try
+    {
+        client.connect(argParser.getIPAddress(), argParser.getPort());
+        std::cout << "s";
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
     return 0;
 }

@@ -8,18 +8,31 @@
 class SocketClient
 {
 public:
-    SocketClient(const std::string& ipAddress = defaultIpAddress,
-        const unsigned port = defaultPort);
     ~SocketClient();
 
-    void shutdown();
+    void connect(const std::string& ipAddress = defaultIpAddress,
+        const unsigned port = defaultPort);
+    void close();
+
+    bool isOperational() const;
 
 private:
     static constexpr unsigned defaultPort = 1337;
     static const std::string defaultIpAddress;
 
+    void shutdown(const bool omitExtraLogs = false);
+    void stopThread();
+    void clientThreadFunc();
+
+    std::optional<std::thread> _clientThread;
+    mutable std::mutex _mutex;
+    std::condition_variable _condVar;
+
     Logger _logger{ "SocketClient" };
+
     int _fdSocket = -1;
+    bool _operational = false;
+    bool _shutdownRequested = false;
 };
 
 #endif
