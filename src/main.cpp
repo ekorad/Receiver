@@ -10,8 +10,9 @@ int main(int argc, char* argv[])
     SocketClient client;
     try
     {
+        client.enableServerWait(true);
         client.connect(argParser.getIPAddress(), argParser.getPort());
-        std::cout << "s";
+        std::this_thread::sleep_for(std::chrono::seconds(3));
     }
     catch(const std::exception& e)
     {
