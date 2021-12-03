@@ -91,7 +91,7 @@ void SocketClient::connect(const std::string& ipAddress, const unsigned port)
 
 SocketClient::~SocketClient()
 {
-    shutdown(false);
+    shutdown(true);
 
     _logger.log("Destroyed socket client", LoggingLevel::INFO);
 }
@@ -120,6 +120,7 @@ void SocketClient::shutdown(const bool omitExtraLogs)
         _condVar.notify_one();
         _clientThread.value().join();
         lock.lock();
+        _clientThread = std::nullopt;
     }
     else if (!omitExtraLogs)
     {
@@ -145,7 +146,6 @@ void SocketClient::shutdown(const bool omitExtraLogs)
     {
         _clientThread.value().join();
     }
-    _clientThread = std::nullopt;
     _shutdownRequested = false;
 
     _logger.log("Shutdown socket client", LoggingLevel::INFO);
@@ -203,7 +203,7 @@ void SocketClient::clientThreadFunc()
     };
     bool shutdownAck = false;
 
-    _logger.log("Client thread initialized");
+    _logger.log("Client thread initialized, working...");
 
     while (true)
     {
@@ -230,20 +230,50 @@ void SocketClient::clientThreadFunc()
             }
         }
 
+        /*
+        double arrbuf[3];
+
+    const int requiredTotalBytesReceived = 24;
+    int totalBytesReceived = 0;
+
+    while ((bytesReceived = recv(client_sock_fd, arrbuf,
+        requiredTotalBytesReceived - totalBytesReceived, 0)) > 0)
+    {
+        // tmpOut << bytesReceived << "\n";
+        totalBytesReceived += bytesReceived;
+        if (totalBytesReceived == requiredTotalBytesReceived)
+        {
+            entries.push(TransmOut{ arrbuf[0], arrbuf[1], arrbuf[2] });
+            totalBytesReceived = 0;
+        }
+        // queueCV.notify_one();
+    }*/
+
         double buf[3];
-        const auto requiredRecv = sizeof(buf);
+        const auto requiredTotalBytes = sizeof(buf);
         ssize_t retVal = 0;
-        auto totalRecv = retVal;
-        while (retVal = recv(_fdSocket, buf, requiredRecv, MSG_DONTWAIT))
+        auto totalRecvBytes = retVal;
+        while (retVal = recv(_fdSocket, buf + (totalRecvBytes / sizeof(double)),
+            requiredTotalBytes - totalRecvBytes, MSG_DONTWAIT))
         {
             if (retVal == 0)
             {
                 break;
             }
+            else if (retVal > 0)
+            {
+                totalRecvBytes += retVal;
+                if (totalRecvBytes == requiredTotalBytes)
+                {
+                    dbgOut << buf[0] << "," << buf[1] << "," << buf[2] << "\n";
+                    totalRecvBytes = 0;
+                }
+            }
             else if (retVal == -1)
             {
                 if ((errno == EAGAIN) || (errno == EWOULDBLOCK))
                 {
+                    _logger.log("Receive operation would block, paused receive");
                     break;
                 }
                 else
@@ -252,14 +282,6 @@ void SocketClient::clientThreadFunc()
                         "Could not receive message" };
                     _logger.log(error.what(), LoggingLevel::ERROR);
                     throw error;
-                }
-            }
-            else
-            {
-                totalRecv += retVal;
-                if (totalRecv == requiredRecv)
-                {
-                    break;
                 }
             }
         }
@@ -272,11 +294,11 @@ void SocketClient::clientThreadFunc()
             lock.unlock();
             break;
         }
-        else
-        {
-            // _dataQueue.push_back(DataTransferObject{ buf[0], buf[1], buf[2] });
-            dbgOut << buf[0] << "," << buf[1] << "," << buf[2] << '\n';
-        }
+        // else
+        // {
+        //     // _dataQueue.push_back(DataTransferObject{ buf[0], buf[1], buf[2] });
+        //     dbgOut << buf[0] << "," << buf[1] << "," << buf[2] << '\n';
+        // }
 
         lock.unlock();
     }
