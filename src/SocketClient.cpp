@@ -249,10 +249,10 @@ void SocketClient::clientThreadFunc()
         // queueCV.notify_one();
     }*/
 
-        double buf[3];
+        static double buf[3];
         const auto requiredTotalBytes = sizeof(buf);
         ssize_t retVal = 0;
-        auto totalRecvBytes = retVal;
+        static auto totalRecvBytes = retVal;
         while (retVal = recv(_fdSocket, buf + (totalRecvBytes / sizeof(double)),
             requiredTotalBytes - totalRecvBytes, MSG_DONTWAIT))
         {
@@ -273,7 +273,8 @@ void SocketClient::clientThreadFunc()
             {
                 if ((errno == EAGAIN) || (errno == EWOULDBLOCK))
                 {
-                    _logger.log("Receive operation would block, paused receive");
+                    _logger.log("Receive operation would block at "
+                        + std::to_string(totalRecvBytes) + " bytes");
                     break;
                 }
                 else
